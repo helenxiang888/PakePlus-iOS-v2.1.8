@@ -77,6 +77,42 @@
             border-radius: 2px;
         }
 
+        /* Tab切换样式 */
+        .tab-container {
+            display: flex;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            background-color: var(--bg-light);
+            overflow: hidden;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: transparent;
+            border: none;
+            color: var(--text-gray);
+            font-size: 15px;
+            font-weight: 500;
+            margin-top: 0;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         .form-container {
             transition: all 0.5s ease;
             max-height: 1000px;
@@ -290,120 +326,241 @@
     <div class="calculator">
         <h1>综合收益计算器</h1>
         
-        <!-- 表单区域：默认显示 -->
-        <div class="form-container" id="formContainer">
-            <div class="form-group">
-                <label for="amount">存款金额（元）</label>
-                <input type="number" id="amount" placeholder="请输入存款金额，例如：100000" min="10000" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="period">存款期限</label>
-                <select id="period" required>
-                    <option value="1">一年期</option>
-                    <option value="2">二年期</option>
-                    <option value="3">三年期</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="customerLevel">客户级别</label>
-                <select id="customerLevel" required>
-                    <option value="normal">普通客户</option>
-                    <option value="vip">贵宾客户</option>
-                    <option value="gold">黄金客户</option>
-                    <option value="platinum">白金客户</option>
-                    <option value="diamond">钻石客户</option>
-                    <option value="private">私行客户</option>
-                </select>
-            </div>
-            
-            <button id="calculateBtn">计算综合收益</button>
+        <!-- Tab切换区域 -->
+        <div class="tab-container">
+            <button class="tab-btn active" data-tab="deposit">存款计算器</button>
+            <button class="tab-btn" data-tab="finance">理财计算器</button>
         </div>
         
-        <!-- 结果区域：默认隐藏 -->
-        <div class="result" id="result">
-            <div class="result-content">
-                <h2>计算结果</h2>
-                
-                <div class="input-summary" id="inputSummary">
-                    <h3>输入信息</h3>
-                    <div class="input-row">
-                        <span class="input-label">存款金额：</span>
-                        <span class="input-value" id="summaryAmount"></span>
-                    </div>
-                    <div class="input-row">
-                        <span class="input-label">存款期限：</span>
-                        <span class="input-value" id="summaryPeriod"></span>
-                    </div>
-                    <div class="input-row">
-                        <span class="input-label">客户级别：</span>
-                        <span class="input-value" id="summaryLevel"></span>
-                    </div>
-                    <div class="input-row">
-                        <span class="input-label">存款利率：</span>
-                        <span class="input-value" id="summaryRate"></span>
-                    </div>
+        <!-- 存款计算器Tab内容 -->
+        <div class="tab-content active" id="deposit">
+            <!-- 表单区域：默认显示 -->
+            <div class="form-container" id="depositFormContainer">
+                <div class="form-group">
+                    <label for="amount">存款金额（元）</label>
+                    <input type="number" id="amount" placeholder="请输入存款金额，例如：100000" min="10000" required>
                 </div>
                 
-                <div class="result-grid">
-                    <div class="result-item">
-                        <span class="result-label">存款本金（元）</span>
-                        <span class="result-value" id="principal"></span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">存款利息（元）</span>
-                        <span class="result-value" id="baseInterest"></span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">积分回馈活动（元）</span>
-                        <span class="result-value" id="activity1"></span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">资产提升活动（元）</span>
-                        <span class="result-value" id="activity2"></span>
-                    </div>
-                    <!-- 新增：每万元积分回馈 -->
-                    <div class="result-item">
-                        <span class="result-label">每万元积分</span>
-                        <span class="result-value" id="perWanQinbei"></span>
-                    </div>
-                    <!-- 新增：每万元返现金额 -->
-                    <div class="result-item">
-                        <span class="result-label">每万元前置</span>
-                        <span class="result-value" id="perWanReward"></span>
-                    </div>
-                    
-                    <div class="total-container">
-                        <div class="total-item">
-                            <span class="result-label">总收益（元）</span>
-                            <span class="result-value highlight" id="totalProfit"></span>
-                        </div>
-                        <div class="total-item">
-                            <span class="result-label">综合年利率</span>
-                            <span class="result-value highlight" id="totalRate"></span>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label for="period">存款期限</label>
+                    <select id="period" required>
+                        <option value="1">一年期</option>
+                        <option value="2">二年期</option>
+                        <option value="3">三年期</option>
+                    </select>
                 </div>
+                
+                <div class="form-group">
+                    <label for="customerLevel">客户级别</label>
+                    <select id="customerLevel" required>
+                        <option value="normal">普通客户</option>
+                        <option value="vip">贵宾客户</option>
+                        <option value="gold">黄金客户</option>
+                        <option value="platinum">白金客户</option>
+                        <option value="diamond">钻石客户</option>
+                        <option value="private">私行客户</option>
+                    </select>
+                </div>
+                
+                <button id="calculateDepositBtn">计算综合收益</button>
             </div>
             
-            <div class="result-footer">
-                <button class="back-btn" id="backBtn">返回重新计算</button>
-                <div class="disclaimer">*仅限内部使用，结果仅供参考*</div>
+            <!-- 结果区域：默认隐藏 -->
+            <div class="result" id="depositResult">
+                <div class="result-content">
+                    <h2>存款计算结果</h2>
+                    
+                    <div class="input-summary" id="depositInputSummary">
+                        <h3>输入信息</h3>
+                        <div class="input-row">
+                            <span class="input-label">存款金额：</span>
+                            <span class="input-value" id="summaryAmount"></span>
+                        </div>
+                        <div class="input-row">
+                            <span class="input-label">存款期限：</span>
+                            <span class="input-value" id="summaryPeriod"></span>
+                        </div>
+                        <div class="input-row">
+                            <span class="input-label">客户级别：</span>
+                            <span class="input-value" id="summaryLevel"></span>
+                        </div>
+                        <div class="input-row">
+                            <span class="input-label">存款利率：</span>
+                            <span class="input-value" id="summaryRate"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="result-grid">
+                        <div class="result-item">
+                            <span class="result-label">存款本金（元）</span>
+                            <span class="result-value" id="principal"></span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">存款利息（元）</span>
+                            <span class="result-value" id="baseInterest"></span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">积分回馈活动（元）</span>
+                            <span class="result-value" id="activity1"></span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">资产提升活动（元）</span>
+                            <span class="result-value" id="activity2"></span>
+                        </div>
+                        <!-- 新增：每万元积分回馈 -->
+                        <div class="result-item">
+                            <span class="result-label">每万元积分</span>
+                            <span class="result-value" id="perWanQinbei"></span>
+                        </div>
+                        <!-- 新增：每万元返现金额 -->
+                        <div class="result-item">
+                            <span class="result-label">每万元前置</span>
+                            <span class="result-value" id="perWanReward"></span>
+                        </div>
+                        
+                        <div class="total-container">
+                            <div class="total-item">
+                                <span class="result-label">总收益（元）</span>
+                                <span class="result-value highlight" id="totalProfit"></span>
+                            </div>
+                            <div class="total-item">
+                                <span class="result-label">综合年利率</span>
+                                <span class="result-value highlight" id="totalRate"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="result-footer">
+                    <button class="back-btn" id="depositBackBtn">返回重新计算</button>
+                    <div class="disclaimer">*仅限内部使用，结果仅供参考*</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 理财计算器Tab内容 -->
+        <div class="tab-content" id="finance">
+            <!-- 表单区域：默认显示 -->
+            <div class="form-container" id="financeFormContainer">
+                <div class="form-group">
+                    <label for="financeAmount">理财购买金额（元）</label>
+                    <input type="number" id="financeAmount" placeholder="请输入理财购买金额，例如：100000" min="1000" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="financeDays">理财期限（天）</label>
+                    <input type="number" id="financeDays" placeholder="请输入理财期限，例如：90" min="1" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="financeRate">预计年化收益率（%）</label>
+                    <input type="number" id="financeRate" placeholder="请输入预计收益率，例如：3.5" min="0.01" step="0.01" required>
+                </div>
+                
+                <button id="calculateFinanceBtn">计算理财收益</button>
+            </div>
+            
+            <!-- 结果区域：默认隐藏 -->
+            <div class="result" id="financeResult">
+                <div class="result-content">
+                    <h2>理财计算结果</h2>
+                    
+                    <div class="input-summary" id="financeInputSummary">
+                        <h3>输入信息</h3>
+                        <div class="input-row">
+                            <span class="input-label">理财购买金额：</span>
+                            <span class="input-value" id="financeSummaryAmount"></span>
+                        </div>
+                        <div class="input-row">
+                            <span class="input-label">理财期限：</span>
+                            <span class="input-value" id="financeSummaryDays"></span>
+                        </div>
+                        <div class="input-row">
+                            <span class="input-label">预计年化收益率：</span>
+                            <span class="input-value" id="financeSummaryRate"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="result-grid">
+                        <div class="result-item">
+                            <span class="result-label">理财本金（元）</span>
+                            <span class="result-value" id="financePrincipal"></span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">理财期限（天）</span>
+                            <span class="result-value" id="financeResultDays"></span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">预计年化收益率</span>
+                            <span class="result-value" id="financeResultRate"></span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">每日收益（元）</span>
+                            <span class="result-value" id="financeDailyProfit"></span>
+                        </div>
+                        
+                        <div class="total-container">
+                            <div class="total-item">
+                                <span class="result-label">总利息收益（元）</span>
+                                <span class="result-value highlight" id="financeTotalProfit"></span>
+                            </div>
+                            <div class="total-item">
+                                <span class="result-label">到期本息合计（元）</span>
+                                <span class="result-value highlight" id="financeTotalAmount"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="result-footer">
+                    <button class="back-btn" id="financeBackBtn">返回重新计算</button>
+                    <div class="disclaimer">*仅限内部使用，结果仅供参考*</div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // DOM元素
-        const calculateBtn = document.getElementById('calculateBtn');
-        const backBtn = document.getElementById('backBtn');
-        const formContainer = document.getElementById('formContainer');
-        const resultContainer = document.getElementById('result');
+        // DOM元素 - Tab切换
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
         
-        // 监听事件
-        calculateBtn.addEventListener('click', calculateProfit);
-        backBtn.addEventListener('click', resetCalculator);
+        // 存款计算器DOM元素
+        const calculateDepositBtn = document.getElementById('calculateDepositBtn');
+        const depositBackBtn = document.getElementById('depositBackBtn');
+        const depositFormContainer = document.getElementById('depositFormContainer');
+        const depositResultContainer = document.getElementById('depositResult');
+        
+        // 理财计算器DOM元素
+        const calculateFinanceBtn = document.getElementById('calculateFinanceBtn');
+        const financeBackBtn = document.getElementById('financeBackBtn');
+        const financeFormContainer = document.getElementById('financeFormContainer');
+        const financeResultContainer = document.getElementById('financeResult');
+        
+        // Tab切换事件
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // 移除所有active类
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                
+                // 添加当前active类
+                btn.classList.add('active');
+                const tabId = btn.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+                
+                // 重置所有计算器状态
+                resetAllCalculators();
+            });
+        });
+
+        // 存款计算器事件监听
+        calculateDepositBtn.addEventListener('click', calculateDepositProfit);
+        depositBackBtn.addEventListener('click', () => resetDepositCalculator());
+
+        // 理财计算器事件监听
+        calculateFinanceBtn.addEventListener('click', calculateFinanceProfit);
+        financeBackBtn.addEventListener('click', () => resetFinanceCalculator());
 
         // 客户级别配置（保持原有配置）
         const customerConfig = {
@@ -415,12 +572,14 @@
             private: { name: '私行客户', rate1: 1.4, rate2: 1.5, rate3: 1.8 }
         };
 
-        // 核心计算函数
-        function calculateProfit() {
+        /**
+         * 存款收益计算
+         */
+        function calculateDepositProfit() {
             // 获取输入值
             const amount = parseFloat(document.getElementById('amount').value) || 0;
             const period = parseInt(document.getElementById('period').value);
-            let customerLevel = document.getElementById('customerLevel').value; // 获取用户选择的客户级别
+            let customerLevel = document.getElementById('customerLevel').value;
             const levelName = customerConfig[customerLevel].name;
             
             // 期限名称和对应利率
@@ -448,7 +607,7 @@
             }
 
             // 1. 隐藏表单区域
-            formContainer.classList.add('collapsed');
+            depositFormContainer.classList.add('collapsed');
             
             // 2. 反显输入内容
             document.getElementById('summaryAmount').textContent = amount.toLocaleString('zh-CN', {minimumFractionDigits: 2});
@@ -456,10 +615,10 @@
             document.getElementById('summaryLevel').textContent = levelName;
             document.getElementById('summaryRate').textContent = originalRate + '%';
 
-            // 3. 计算各部分收益（关键修复：传入用户选择的customerLevel，而非固定normal）
+            // 3. 计算各部分收益
             const {activity1Profit, qinbeiPerWan} = calculateActivity1(amount); 
-            const baseInterest = calculateBaseInterest(amount, period, customerLevel); // 修复1：使用用户选择的级别
-            const {activity2Profit, rewardPerWan} = calculateActivity2(amount, period, customerLevel); // 修复2：使用用户选择的级别
+            const baseInterest = calculateBaseInterest(amount, period, customerLevel);
+            const {activity2Profit, rewardPerWan} = calculateActivity2(amount, period, customerLevel);
             
             // 总收益和综合利率
             const totalProfit = activity1Profit + baseInterest + activity2Profit;
@@ -484,29 +643,117 @@
             document.getElementById('perWanReward').textContent = rewardPerWan.toLocaleString('zh-CN', {minimumFractionDigits: 2}) + ' 元';
             
             // 5. 显示结果区域和返回按钮
-            resultContainer.style.display = 'flex';
-            backBtn.style.display = 'block';
+            depositResultContainer.style.display = 'flex';
+            depositBackBtn.style.display = 'block';
             
             // 平滑滚动到结果区域
-            resultContainer.scrollIntoView({ behavior: 'smooth' });
+            depositResultContainer.scrollIntoView({ behavior: 'smooth' });
         }
 
         /**
-         * 重置计算器（返回重新计算）
+         * 理财收益计算
          */
-        function resetCalculator() {
+        function calculateFinanceProfit() {
+            // 获取输入值
+            const amount = parseFloat(document.getElementById('financeAmount').value) || 0;
+            const days = parseInt(document.getElementById('financeDays').value) || 0;
+            const rate = parseFloat(document.getElementById('financeRate').value) || 0;
+
+            // 验证输入
+            if (amount < 1000) {
+                alert('理财购买金额不能低于1000元，请重新输入！');
+                return;
+            }
+            if (days < 1) {
+                alert('理财期限不能少于1天，请重新输入！');
+                return;
+            }
+            if (rate <= 0) {
+                alert('预计年化收益率必须大于0，请重新输入！');
+                return;
+            }
+
+            // 1. 隐藏表单区域
+            financeFormContainer.classList.add('collapsed');
+            
+            // 2. 反显输入内容
+            document.getElementById('financeSummaryAmount').textContent = amount.toLocaleString('zh-CN', {minimumFractionDigits: 2});
+            document.getElementById('financeSummaryDays').textContent = days + ' 天';
+            document.getElementById('financeSummaryRate').textContent = rate + '%';
+
+            // 3. 计算理财收益
+            // 理财收益计算公式：利息 = 本金 × 年化收益率 ÷ 365 × 理财天数
+            const dailyRate = rate / 100 / 365; // 日利率
+            const dailyProfit = amount * dailyRate; // 每日收益
+            const totalProfit = amount * dailyRate * days; // 总利息收益
+            const totalAmount = amount + totalProfit; // 本息合计
+
+            // 4. 格式化显示结果
+            const formatOptions = { 
+                minimumFractionDigits: 2, 
+                maximumFractionDigits: 2,
+                useGrouping: true 
+            };
+            
+            document.getElementById('financePrincipal').textContent = amount.toLocaleString('zh-CN', formatOptions);
+            document.getElementById('financeResultDays').textContent = days + ' 天';
+            document.getElementById('financeResultRate').textContent = rate + '%';
+            document.getElementById('financeDailyProfit').textContent = dailyProfit.toLocaleString('zh-CN', formatOptions);
+            document.getElementById('financeTotalProfit').textContent = totalProfit.toLocaleString('zh-CN', formatOptions);
+            document.getElementById('financeTotalAmount').textContent = totalAmount.toLocaleString('zh-CN', formatOptions);
+            
+            // 5. 显示结果区域和返回按钮
+            financeResultContainer.style.display = 'flex';
+            financeBackBtn.style.display = 'block';
+            
+            // 平滑滚动到结果区域
+            financeResultContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /**
+         * 重置存款计算器
+         */
+        function resetDepositCalculator() {
             // 1. 显示表单区域
-            formContainer.classList.remove('collapsed');
+            depositFormContainer.classList.remove('collapsed');
             
             // 2. 隐藏结果区域和返回按钮
-            resultContainer.style.display = 'none';
-            backBtn.style.display = 'none';
+            depositResultContainer.style.display = 'none';
+            depositBackBtn.style.display = 'none';
             
             // 3. 清空输入框
             document.getElementById('amount').value = '';
             
             // 4. 滚动到表单顶部
-            formContainer.scrollIntoView({ behavior: 'smooth' });
+            depositFormContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /**
+         * 重置理财计算器
+         */
+        function resetFinanceCalculator() {
+            // 1. 显示表单区域
+            financeFormContainer.classList.remove('collapsed');
+            
+            // 2. 隐藏结果区域和返回按钮
+            financeResultContainer.style.display = 'none';
+            financeBackBtn.style.display = 'none';
+            
+            // 3. 清空输入框
+            document.getElementById('financeAmount').value = '';
+            document.getElementById('financeDays').value = '';
+            document.getElementById('financeRate').value = '';
+            
+            // 4. 滚动到表单顶部
+            financeFormContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /**
+         * 重置所有计算器状态
+         */
+        function resetAllCalculators() {
+            resetDepositCalculator();
+            resetFinanceCalculator();
         }
 
         /**
@@ -540,13 +787,13 @@
             let rate = 0;
             switch(period) {
                 case 1:
-                    rate = customerConfig[level].rate1 / 100; // 使用传入的级别
+                    rate = customerConfig[level].rate1 / 100;
                     break;
                 case 2:
-                    rate = customerConfig[level].rate2 / 100; // 使用传入的级别
+                    rate = customerConfig[level].rate2 / 100;
                     break;
                 case 3:
-                    rate = customerConfig[level].rate3 / 100; // 使用传入的级别
+                    rate = customerConfig[level].rate3 / 100;
                     break;
             }
             return amount * rate * period;
@@ -560,7 +807,7 @@
             const tenThousand = amount / 10000;
             let rewardPerWan = 0;
 
-            // 按客户级别区分返现规则（恢复原有逻辑）
+            // 按客户级别区分返现规则
             switch(level) {
                 case 'normal': // 普通客户
                     if (period === 1) { 
@@ -568,21 +815,21 @@
                         else if (amount >= 500000 && amount < 3000000) rewardPerWan = 35;
                         else if (amount >= 3000000) rewardPerWan = 40;
                     }
-           	   if (period === 3) { 
-                	       if (amount >= 2000000 && amount < 3000000) rewardPerWan = 15;
-                  	          else if (amount >= 3000000) rewardPerWan = 30;
-        	  }
- 		break;
+                    if (period === 3) { 
+                        if (amount >= 2000000 && amount < 3000000) rewardPerWan = 15;
+                        else if (amount >= 3000000) rewardPerWan = 30;
+                    }
+                    break;
                 case 'vip': // 贵宾客户
-                  if (period === 1) { 
+                    if (period === 1) { 
                         if (amount >= 100000 && amount < 500000) rewardPerWan = 20;
                         else if (amount >= 500000 && amount < 3000000) rewardPerWan = 35;
                         else if (amount >= 3000000) rewardPerWan = 40;
                     }
-                       if (period === 3) { 
-                	       if (amount >= 2000000 && amount < 3000000) rewardPerWan = 15;
-                  	          else if (amount >= 3000000) rewardPerWan = 30;
-        	   }
+                    if (period === 3) { 
+                        if (amount >= 2000000 && amount < 3000000) rewardPerWan = 15;
+                        else if (amount >= 3000000) rewardPerWan = 30;
+                    }
                     break;
                 case 'gold': // 黄金客户
                     if (period === 1) { 
@@ -590,44 +837,42 @@
                         else if (amount >= 500000 && amount < 3000000) rewardPerWan = 35;
                         else if (amount >= 3000000) rewardPerWan = 40;
                     }
- 		  if (period === 3) { 
-                	       if (amount >= 2000000 && amount < 3000000) rewardPerWan = 15;
-                  	          else if (amount >= 3000000) rewardPerWan = 30;
-        	  }
+                    if (period === 3) { 
+                        if (amount >= 2000000 && amount < 3000000) rewardPerWan = 15;
+                        else if (amount >= 3000000) rewardPerWan = 30;
+                    }
                     break;
                 case 'platinum': // 白金客户
-		  if (period === 1) { 
+                    if (period === 1) { 
                         if (amount  < 3000000) rewardPerWan = 35;
                         else if (amount >= 3000000) rewardPerWan = 40;
                     }
-		    if (period === 3) { 
-                	       if (amount >= 2000000 && amount < 3000000) rewardPerWan = 15;
-                  	          else if (amount >= 3000000) rewardPerWan = 30;
-        	  }
+                    if (period === 3) { 
+                        if (amount >= 2000000 && amount < 3000000) rewardPerWan = 15;
+                        else if (amount >= 3000000) rewardPerWan = 30;
+                    }
                     break;
                 case 'diamond': // 钻石客户
-                      if (period === 1) { 
+                    if (period === 1) { 
                         if ( amount < 3000000) rewardPerWan = 35;
                         else if (amount >= 3000000) rewardPerWan = 40;
                     }
-		   if (period === 3) { 
-                	       if (amount >= 2000000 && amount < 3000000) rewardPerWan = 15;
-                  	          else if (amount >= 3000000) rewardPerWan = 30;
-        	  }
+                    if (period === 3) { 
+                        if (amount >= 2000000 && amount < 3000000) rewardPerWan = 15;
+                        else if (amount >= 3000000) rewardPerWan = 30;
+                    }
                     break;
                 case 'private': // 私行客户
-                      if (period === 1) { 
+                    if (period === 1) { 
                         if (amount < 3000000) rewardPerWan = 40;
                         else if (amount >= 3000000) rewardPerWan = 40;
                     }
-		   if (period === 3) { 
-                	       if (amount >= 2000000 && amount < 3000000) rewardPerWan = 15;
-                  	          else if (amount >= 3000000) rewardPerWan = 30;
-        	  }
+                    if (period === 3) { 
+                        if (amount >= 2000000 && amount < 3000000) rewardPerWan = 15;
+                        else if (amount >= 3000000) rewardPerWan = 30;
+                    }
                     break;
             }
-
-
 
             const activity2Profit = tenThousand * rewardPerWan;
             return {activity2Profit, rewardPerWan};
@@ -635,8 +880,15 @@
 
         // 支持回车键触发计算
         document.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && !formContainer.classList.contains('collapsed')) {
-                calculateProfit();
+            // 存款计算器回车
+            if (e.key === 'Enter' && !depositFormContainer.classList.contains('collapsed') && 
+                document.querySelector('.tab-btn[data-tab="deposit"]').classList.contains('active')) {
+                calculateDepositProfit();
+            }
+            // 理财计算器回车
+            if (e.key === 'Enter' && !financeFormContainer.classList.contains('collapsed') && 
+                document.querySelector('.tab-btn[data-tab="finance"]').classList.contains('active')) {
+                calculateFinanceProfit();
             }
         });
     </script>
